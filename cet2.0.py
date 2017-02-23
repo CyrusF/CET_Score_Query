@@ -48,6 +48,7 @@ ressheet.write(i, 5, '写作翻译')
 ressheet.write(i, 6, '口语')
 ok=0;
 error=0;
+
 for i in range(1,nrows):
     zkzh=table.cell(i,5).value
     xm=table.cell(i,6).value
@@ -69,8 +70,7 @@ for i in range(1,nrows):
                 print("Try Again [%05d] %s - ERROR!" % (i,zkzh))
                 error+=1
     i+=1
-    if (i>20):
-        break
+
 print("查询完毕，共计 %d 条结果"%(i-1))
 print("其中 %d 条结果查询失败"%(error))
 resworkbook.save('Result.xls')
