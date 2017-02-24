@@ -10,14 +10,10 @@ def query(nj,yx,bj,zh,zkzh,xm,jb,xff):
     u=requests.session()
     u.cookies.clear()
     url = "http://www.chsi.com.cn/cet/query?zkzh=%s&xm=%s" % (zkzh, urllib.request.quote(xm))
-    #print(url)
     headers = {"Referer": "http://www.chsi.com.cn/cet/",
                "X-Forwarded-For":"127.0.0."+str(xff)
                }
-    r = u.get(url, headers=headers).text
-    #print(r)
-    #os.system("pause")
-    r=r.partition(zkzh)[2].partition("colorRed\">")[2]
+    r = u.get(url, headers=headers).text.partition(zkzh)[2].partition("colorRed\">")[2]
     xx=r.partition("</span>")[0].strip()
     x1=r.partition("力")[2].partition("<td>")[2].partition("</td>")[0].strip()
     x2 = r.partition("读")[2].partition("<td>")[2].partition("</td>")[0].strip()
@@ -80,7 +76,7 @@ xff=123;
 while True:
     nj=students.readline().partition("\n")[0]
     yx=students.readline().partition("\n")[0]
-    bj=students.readline().partition(   "\n")[0]
+    bj=students.readline().partition("\n")[0]
     xh=students.readline().partition("\n")[0]
     zkzh=students.readline().partition("\n")[0]
     xm=students.readline().partition("\n")[0]
