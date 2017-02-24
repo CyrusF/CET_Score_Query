@@ -6,14 +6,18 @@ import sys
 import urllib.request
 import time
 
-def query(nj,yx,bj,zh,zkzh,xm,jb):
+def query(nj,yx,bj,zh,zkzh,xm,jb,xff):
     u=requests.session()
     u.cookies.clear()
     url = "http://www.chsi.com.cn/cet/query?zkzh=%s&xm=%s" % (zkzh, urllib.request.quote(xm))
     #print(url)
     headers = {"Referer": "http://www.chsi.com.cn/cet/",
-               "X-Forwarded-For": "127.0.0.1"}
-    r = u.get(url, headers=headers).text.partition(zkzh)[2].partition("colorRed\">")[2]
+               "X-Forwarded-For":"127.0.0."+str(xff)
+               }
+    r = u.get(url, headers=headers).text
+    #print(r)
+    #os.system("pause")
+    r=r.partition(zkzh)[2].partition("colorRed\">")[2]
     xx=r.partition("</span>")[0].strip()
     x1=r.partition("力")[2].partition("<td>")[2].partition("</td>")[0].strip()
     x2 = r.partition("读")[2].partition("<td>")[2].partition("</td>")[0].strip()
@@ -62,16 +66,17 @@ def query(nj,yx,bj,zh,zkzh,xm,jb):
         data.write(res)
         return 1
 
-#print("准备查询")
-#os.system("chcp 437")
-#os.system("cls")
+print("准备查询")
+os.system("chcp 437")
+os.system("cls")
 
-students=open('students_test.txt','r',encoding='utf-8')
+students=open('students_all.txt','r',encoding='utf-8')
 data=open('data.txt','w',encoding='utf-8')
 type = sys.getfilesystemencoding()
 i=1
 ok=0;
 error=0;
+xff=123;
 while True:
     nj=students.readline().partition("\n")[0]
     yx=students.readline().partition("\n")[0]
@@ -83,30 +88,35 @@ while True:
     if len(bj)==0:
         break
     else:
-        if (query(nj,yx,bj,xh,zkzh,xm,jb)==1):
+        if (query(nj,yx,bj,xh,zkzh,xm,jb,xff)==1):
             print("[%05d] %s - OK!" % (i,zkzh))
             ok+=1
         else:
+            xff+=1
             print("[%05d] %s - ERROR!" % (i,zkzh))
-            if (query(nj,yx,bj,xh,zkzh,xm,jb)==1):
+            if (query(nj,yx,bj,xh,zkzh,xm,jb,xff)==1):
                 print("Try Again [%03d] %s - OK!" % (i,zkzh))
                 ok+=1
             else:
+                xff+=1
                 print("Try Again [%05d] %s - ERROR!" % (i,zkzh))
-                if (query(nj,yx,bj,xh,zkzh,xm,jb)==1):
+                if (query(nj,yx,bj,xh,zkzh,xm,jb,xff)==1):
                     print("Try Again [%05d] %s - OK!" % (i,zkzh))
                     ok+=1
                 else:
+                    xff+=1
                     print("Try Again [%05d] %s - ERROR!" % (i,zkzh))
                     error+=1
         i+=1
-        if (i%43==0):
+        '''if (i>100):
+            break'''
+        '''if (i%43==0):
             print("Pausing for auto-detection...")
-            time.sleep(30)
+            time.sleep(5)'''
 
-#print("查询完毕，共计 %d 条结果"%(i-1))
-#print("其中 %d 条结果查询失败"%(error))
-print("===%d completed and %d failed.==="%(ok,error))
+print("查询完毕，共计 %d 条结果"%(i-1))
+print("其中 %d 条结果查询失败"%(error))
+#print("===%d completed and %d failed.==="%(ok,error))
 students.close()
 data.close()
-#os.system("pause")
+os.system("pause")
