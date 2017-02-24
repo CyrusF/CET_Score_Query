@@ -32,13 +32,13 @@ def query(i,zkzh,xm,jb):
                 dictr[9]='\\'
             if (dictr[10].partition('--')[1]=='--'):
                 dictr[10]='\\'
-            ressheet.write((i-1)%5000+1, 0, xm)
-            ressheet.write((i-1)%5000+1, 1, jb)
-            ressheet.write((i-1)%5000+1, 2, dictr[5])
-            ressheet.write((i-1)%5000+1, 3, dictr[2])
-            ressheet.write((i-1)%5000+1, 4, dictr[3])
-            ressheet.write((i-1)%5000+1, 5, dictr[4])
-            ressheet.write((i-1)%5000+1, 6, dictr[10])
+            ressheet.write(i, 0, xm)
+            ressheet.write(i, 1, jb)
+            ressheet.write(i, 2, dictr[5])
+            ressheet.write(i, 3, dictr[2])
+            ressheet.write(i, 4, dictr[3])
+            ressheet.write(i, 5, dictr[4])
+            ressheet.write(i, 6, dictr[10])
         except:
             return 4
         else:
@@ -64,8 +64,9 @@ ressheet.write(i, 5, '写作翻译')
 ressheet.write(i, 6, '口语')
 ok=0;
 error=0;
+print(nrows)
 
-for i in range(9999,nrows+1):
+for i in range(1,nrows):
     zkzh=table.cell(i,5).value.strip()
     xm=table.cell(i,6).value.strip()
     jb=table.cell(i,1).value.strip()
@@ -88,12 +89,8 @@ for i in range(9999,nrows+1):
             else:
                 print("Try Again [%05d] %s - %s!" % (i,xm,errorlist[k]))
                 error+=1
-    if (i%5000==0):
-        resworkbook.save('Result'+str(int(i/5000))+'.xls')
-        print('Saved Workbook %d'%(i/5000))
 
 print("查询完毕，共计 %d 条结果"%(i))
 print("其中 %d 条结果查询失败"%(error))
-if (i%5000!=0):
-    resworkbook.save('Result'+str(int(i/5000+1))+'.xls')
+resworkbook.save('Result.xls')
 os.system("pause")
